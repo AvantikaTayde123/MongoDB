@@ -182,3 +182,18 @@ test> db.employee.find({salary:db.employee.find().sort({salary:-1}).limit(1)
     skill: 'react'
   }
 ]
+test>  db.employee.find({
+...     salary: db.employee.find({
+...        salary: {$lt: db.employee.find().sort({salary: -1}).limit(1).toArray()[0].salary}
+...     }).sort({salary:-1}).limit(1).toArray()[0].salary
+...   })
+[
+  {
+    _id: ObjectId('6763730937cf218bf8893bfa'),
+    name: 'c',
+    salary: 70000,
+    skill: 'flutter'
+  }
+]
+test> db.employee.find({ salary: { $lt: db.employee.find().sort({ salary: -1 }).limit(1).toArray()[0].salary } }).sort({ salary: -1 }).limit(1).toArray()[0].salary
+70000
