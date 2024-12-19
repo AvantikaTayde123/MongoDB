@@ -1,0 +1,184 @@
+mongosh
+Current Mongosh Log ID: 6763718737cf218bf8893bf7
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.3.4
+Using MongoDB:          8.0.1
+Using Mongosh:          2.3.4
+mongosh 2.3.6 is available for download: https://www.mongodb.com/try/download/shell
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2024-12-13T11:53:24.173+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> show dbs
+admin     40.00 KiB
+company  272.00 KiB
+config    36.00 KiB
+local     72.00 KiB
+test      72.00 KiB
+test> db.createCollection("employee");
+{ ok: 1 }
+
+
+test> db.employee.insertMany([{name:"A", salary:80000, skill:"java"},{name:"b", salary:80000, skill:"react"},{name:"c", salary:70000, skill:"flutter"},{name:"d", salary:50000, skill:"android"},{name:"e", salary:55000, skill:"django"},{name:"f", salary:60000, skill:"python"}]);
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('6763730937cf218bf8893bf8'),
+    '1': ObjectId('6763730937cf218bf8893bf9'),
+    '2': ObjectId('6763730937cf218bf8893bfa'),
+    '3': ObjectId('6763730937cf218bf8893bfb'),
+    '4': ObjectId('6763730937cf218bf8893bfc'),
+    '5': ObjectId('6763730937cf218bf8893bfd')
+  }
+}
+test> db.employee.find();
+[
+  {
+    _id: ObjectId('6763730937cf218bf8893bf8'),
+    name: 'A',
+    salary: 80000,
+    skill: 'java'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bf9'),
+    name: 'b',
+    salary: 80000,
+    skill: 'react'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bfa'),
+    name: 'c',
+    salary: 70000,
+    skill: 'flutter'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bfb'),
+    name: 'd',
+    salary: 50000,
+    skill: 'android'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bfc'),
+    name: 'e',
+    salary: 55000,
+    skill: 'django'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bfd'),
+    name: 'f',
+    salary: 60000,
+    skill: 'python'
+  }
+]
+test> db.employee.find({skill:"java"});
+[
+  {
+    _id: ObjectId('6763730937cf218bf8893bf8'),
+    name: 'A',
+    salary: 80000,
+    skill: 'java'
+  }
+]
+test> db.employee.find({skill:"java"},{name:1, skill:1, _id:0});
+[ { name: 'A', skill: 'java' } ]
+test> db.employee.find({name:1, skill:1, _id:0});
+
+test> db.employee.find({salary:{$gte:70000}})
+[
+  {
+    _id: ObjectId('6763730937cf218bf8893bf8'),
+    name: 'A',
+    salary: 80000,
+    skill: 'java'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bf9'),
+    name: 'b',
+    salary: 80000,
+    skill: 'react'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bfa'),
+    name: 'c',
+    salary: 70000,
+    skill: 'flutter'
+  }
+]
+#operator
+$gt, $lt,$gte, $lte, #ne,$eq, $and, $or
+test> db.employee.find({$and:[{skill:"java"},{salary:{$gte:60000}}]})
+[
+  {
+    _id: ObjectId('6763730937cf218bf8893bf8'),
+    name: 'A',
+    salary: 80000,
+    skill: 'java'
+  }
+]
+test> db.employee.find({ $or:[{skill:"java"},{salary:{$gte:50000}} ] })
+[
+  {
+    _id: ObjectId('6763730937cf218bf8893bf8'),
+    name: 'A',
+    salary: 80000,
+    skill: 'java'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bf9'),
+    name: 'b',
+    salary: 80000,
+    skill: 'react'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bfa'),
+    name: 'c',
+    salary: 70000,
+    skill: 'flutter'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bfb'),
+    name: 'd',
+    salary: 50000,
+    skill: 'android'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bfc'),
+    name: 'e',
+    salary: 55000,
+    skill: 'django'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bfd'),
+    name: 'f',
+    salary: 60000,
+    skill: 'python'
+  }
+]
+test> db.employee.find({salary:{$eq:70000}})
+[
+  {
+    _id: ObjectId('6763730937cf218bf8893bfa'),
+    name: 'c',
+    salary: 70000,
+    skill: 'flutter'
+  }
+]
+test> db.employee.find({salary:db.employee.find().sort({salary:-1}).limit(1)
+.toArray()[0].salary})
+[
+  {
+    _id: ObjectId('6763730937cf218bf8893bf8'),
+    name: 'A',
+    salary: 80000,
+    skill: 'java'
+  },
+  {
+    _id: ObjectId('6763730937cf218bf8893bf9'),
+    name: 'b',
+    salary: 80000,
+    skill: 'react'
+  }
+]
